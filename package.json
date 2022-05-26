@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --dir src"
+    "lint": "next lint --dir src",
+    "format": "prettier --write --ignore-path .gitignore src/**/*.{js,jsx,ts,tsx,json,css}"
   },
   "dependencies": {
     "next": "12.1.6",
