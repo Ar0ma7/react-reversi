@@ -20,7 +20,7 @@ export const Board: React.FC<BoardProps> = ({ squares, size }) => {
     }),
   )
 
-  const sizes = [...Array(size)].fill('50px')
+  const sizes = [...Array(size + 2)].fill('50px')
 
   return (
     <StyledGridContainer columns={sizes} rows={sizes} areas={squares.map((r, i) => r.map((c, j) => `area${i}_${j}`))}>

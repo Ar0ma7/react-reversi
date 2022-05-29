@@ -3,18 +3,19 @@ import { Board } from '@/components/Board'
 import SquareState from '@/types/SquareState'
 
 const getBoardArray = (size: number): SquareState[][] => {
-  const board = [...Array(size)].map((_, index) => {
-    if (index === 0 || index === size - 1) {
-      return [...Array(size)].fill(2)
+  const includeWallSize = size + 2
+  const board = [...Array(includeWallSize)].map((_, index) => {
+    if (index === 0 || index === includeWallSize - 1) {
+      return [...Array(includeWallSize)].fill(2)
     } else {
-      return [2, ...Array(size - 2).fill(0), 2]
+      return [2, ...Array(size).fill(0), 2]
     }
   })
 
-  board[size / 2 - 1][size / 2 - 1] = 1
-  board[size / 2][size / 2] = 1
-  board[size / 2 - 1][size / 2] = -1
-  board[size / 2][size / 2 - 1] = -1
+  board[includeWallSize / 2 - 1][includeWallSize / 2 - 1] = 1
+  board[includeWallSize / 2][includeWallSize / 2] = 1
+  board[includeWallSize / 2 - 1][includeWallSize / 2] = -1
+  board[includeWallSize / 2][includeWallSize / 2 - 1] = -1
 
   return board
 }
