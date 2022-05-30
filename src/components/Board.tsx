@@ -5,7 +5,7 @@ import SquareState from '@/types/SquareState'
 
 type BoardProps = {
   /* 偶数 */
-  size: number,
+  size: number
   /* 最初のターン - 0: 自分, 1: 相手 */
   firstTurn: number
 }
@@ -47,9 +47,9 @@ export const Board: React.FC<BoardProps> = React.memo(({ size, firstTurn }) => {
 
   const sizes = [...Array(size + 2)].fill('50px')
 
-  const useForceUpdate = (): () => void => {
+  const useForceUpdate = (): (() => void) => {
     const [value, setValue] = useState(0)
-    return () => setValue(value => value + 1)
+    return () => setValue((value) => value + 1)
   }
 
   const forceUpdate = useForceUpdate()
@@ -63,7 +63,7 @@ export const Board: React.FC<BoardProps> = React.memo(({ size, firstTurn }) => {
   const handleClick = (row: number, col: number) => {
     if (board[row][col] === 0) {
       const newBoard = board
-      newBoard[row][col] = (turn % 2 === 0) ? 1 : -1
+      newBoard[row][col] = turn % 2 === 0 ? 1 : -1
       setBoard(newBoard)
       setTurn(turn + 1)
       forceUpdate()
@@ -71,7 +71,7 @@ export const Board: React.FC<BoardProps> = React.memo(({ size, firstTurn }) => {
   }
 
   return (
-    <StyledGridContainer columns={sizes} rows={sizes} areas={board.map((r,i) => r.map((c,j) => `area${i}${j}`))}>
+    <StyledGridContainer columns={sizes} rows={sizes} areas={board.map((r, i) => r.map((c, j) => `area${i}${j}`))}>
       {items}
     </StyledGridContainer>
   )
