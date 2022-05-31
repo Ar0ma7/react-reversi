@@ -130,8 +130,8 @@ const checkMobility = (board: BoardType, y: number, x: number, value: number): n
 export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
   const [currentTurn, setNextTurn] = useState<Turn>(firstTurn)
   const [board, setBoard] = useState<BoardType>(getInitialBoard(size))
-  const [movableDir, setMovableDir] = useState<number[][]>(getMovableDir(board, currentTurn % 2 === 0 ? 1 : -1))
-  const [movablePos, setMovablePos] = useState<boolean[][]>(getMovablePos(board, currentTurn % 2 === 0 ? 1 : -1))
+  const [movableDir, setMovableDir] = useState<number[][]>(getMovableDir(board, currentTurn))
+  const [movablePos, setMovablePos] = useState<boolean[][]>(getMovablePos(board, currentTurn))
 
   const sizes = [...Array(size + 2)].fill('50px')
 
