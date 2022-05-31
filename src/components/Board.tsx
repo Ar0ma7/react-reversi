@@ -32,13 +32,13 @@ const getInitialBoard = (size: number): BoardType => {
   return board
 }
 
-const getMovableDir = (board: BoardType, currentValue: number): number[][] => {
-  return board.map((y, yIdx) => y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentValue)))
+const getMovableDir = (board: BoardType, currentTurn: Turn): number[][] => {
+  return board.map((y, yIdx) => y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)))
 }
-const getMovablePos = (board: BoardType, currentValue: number): boolean[][] => {
+const getMovablePos = (board: BoardType, currentTurn: Turn): boolean[][] => {
   return board.map((y, yIdx) =>
     y.map((value, xIdx) => {
-      const dir = checkMobility(board, yIdx, xIdx, currentValue)
+      const dir = checkMobility(board, yIdx, xIdx, currentTurn)
       return dir !== 0
     }),
   )
@@ -154,12 +154,13 @@ export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
    */
   const handleClick = (y: number, x: number) => {
     const newBoard = [...board]
+    const nextTurn: Turn = currentTurn === 1 ? -1 : 1
     if (getMovablePos(board, currentTurn)[y][x]) {
       newBoard[y][x] = currentTurn
-      setNextTurn(currentTurn === 1 ? -1 : 1)
+      setNextTurn(nextTurn)
       setBoard(newBoard)
-      setMovableDir(getMovableDir(newBoard, -currentTurn))
-      setMovablePos(getMovablePos(newBoard, -currentTurn))
+      setMovableDir(getMovableDir(newBoard, nextTurn))
+      setMovablePos(getMovablePos(newBoard, nextTurn))
     }
   }
 
