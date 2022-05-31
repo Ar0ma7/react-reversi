@@ -5,7 +5,7 @@ export default function Home() {
   const size = 8
   return (
     <>
-      <Board size={size} firstTurn={0} />
+      <Board size={size} firstTurn={1} />
     </>
   )
 }
