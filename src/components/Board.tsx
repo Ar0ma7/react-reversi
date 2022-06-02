@@ -1,20 +1,15 @@
 import React, { useState } from 'react'
 import { Square } from '@/components/Square'
 import styled from '@emotion/styled'
-import SquareState from '@/types/SquareState'
+import { BoardType, Turn } from '@/types/global'
 
-/* 最初のターン - 1: 自分, -1: 相手 */
-type Turn = 1 | -1
-
-type BoardProps = {
+export type BoardProps = {
   firstTurn: Turn
   /* 盤面サイズ（偶数） */
   size: number
 }
 
-type BoardType = SquareState[][]
-
-const getInitialBoard = (size: number): BoardType => {
+export const getInitialBoard = (size: number): BoardType => {
   const includeWallSize = size + 2
   const board = [...Array(includeWallSize)].map((_, yIdx) => {
     if (yIdx === 0 || yIdx === includeWallSize - 1) {

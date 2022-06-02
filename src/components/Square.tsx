@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from '@emotion/react'
-import SquareState from '@/types/SquareState'
+import { SquareState } from '@/types/global'
 
 export type SquareProps = {
   state: SquareState
