@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Square } from '@/components/Square'
 import styled from '@emotion/styled'
 import { BoardType, Turn } from '@/types/global'
-import { getInitialBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
+import { getFlippedBoard, getInitialBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
 
 export type BoardProps = {
   firstTurn: Turn
@@ -20,7 +20,7 @@ export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
 
   const items = board.map((y, yIdx) =>
     y.map((x, xIdx) => {
-      const key = `area${yIdx}${xIdx}`
+      const key = `area${xIdx}_${yIdx}`
       return (
         <StyledGridItem key={key} area={key} onClick={() => handleClick(yIdx, xIdx)}>
           <Square state={x} />
@@ -36,21 +36,26 @@ export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
    * @param {number} x
    */
   const handleClick = (y: number, x: number) => {
-    const newBoard = [...board]
     const nextTurn: Turn = currentTurn === 1 ? -1 : 1
     if (getMovablePos(board, currentTurn)[y][x]) {
-      newBoard[y][x] = currentTurn
+      const newBoard = getFlippedBoard({
+        board,
+        x,
+        y,
+        dir: getMovableDir(board, currentTurn)[y][x],
+        currentTurn,
+      })
+      setBoard([...newBoard])
       setNextTurn(nextTurn)
-      setBoard(newBoard)
-      setMovableDir(getMovableDir(newBoard, nextTurn))
-      setMovablePos(getMovablePos(newBoard, nextTurn))
+      setMovableDir([...getMovableDir(newBoard, nextTurn)])
+      setMovablePos([...getMovablePos(newBoard, nextTurn)])
     }
   }
 
   return (
     <>
       currentTurn: {currentTurn}
-      <StyledGridContainer columns={sizes} rows={sizes} areas={board.map((r, i) => r.map((c, j) => `area${i}${j}`))}>
+      <StyledGridContainer columns={sizes} rows={sizes} areas={board.map((y, yIdx) => y.map((x, xIdx) => `area${xIdx}_${yIdx}`))}>
         {items}
       </StyledGridContainer>
       {movableDir.map((r, i) => (
