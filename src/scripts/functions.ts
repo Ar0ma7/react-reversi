@@ -1,5 +1,5 @@
-import { BoardType, Turn } from '@/types/global'
-import { direction } from "@/scripts/variables";
+import { BoardType, Stone } from '@/types/global'
+import { direction } from '@/scripts/variables'
 
 export const getInitialBoard = (size: number): BoardType => {
   const includeWallSize = size + 2
@@ -19,11 +19,11 @@ export const getInitialBoard = (size: number): BoardType => {
   return board
 }
 
-export const getMovableDir = (board: BoardType, currentTurn: Turn): number[][] => {
+export const getMovableDir = (board: BoardType, currentTurn: Stone): number[][] => {
   return board.map((y, yIdx) => y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)))
 }
 
-export const getMovablePos = (board: BoardType, currentTurn: Turn): boolean[][] => {
+export const getMovablePos = (board: BoardType, currentTurn: Stone): boolean[][] => {
   return board.map((y, yIdx) =>
     y.map((value, xIdx) => {
       const dir = checkMobility(board, yIdx, xIdx, currentTurn)
@@ -117,12 +117,12 @@ export const getFlippedBoard = ({
   y,
   dir,
   currentTurn,
-} : {
+}: {
   board: BoardType
   x: number
   y: number
   dir: number
-  currentTurn: Turn
+  currentTurn: Stone
 }): BoardType => {
   const boardTemp = [...board]
 

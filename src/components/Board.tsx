@@ -1,22 +1,20 @@
 import React, { useState } from 'react'
 import { Square } from '@/components/Square'
 import styled from '@emotion/styled'
-import { BoardType, Turn } from '@/types/global'
+import { BoardType, Stone } from '@/types/global'
 import { getFlippedBoard, getInitialBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
 
 export type BoardProps = {
-  firstTurn: Turn
+  playerStone: Stone
   /* 盤面サイズ（偶数） */
-  size: number
+  boardSize: number
 }
 
-export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
-  const [currentTurn, setNextTurn] = useState<Turn>(firstTurn)
-  const [board, setBoard] = useState<BoardType>(getInitialBoard(size))
-  const [movableDir, setMovableDir] = useState<number[][]>(getMovableDir(board, currentTurn))
-  const [movablePos, setMovablePos] = useState<boolean[][]>(getMovablePos(board, currentTurn))
+export const Board: React.FC<BoardProps> = React.memo(({ playerStone, boardSize }) => {
+  const [currentTurn, setNextTurn] = useState<Stone>(playerStone)
+  const [board, setBoard] = useState<BoardType>(getInitialBoard(boardSize))
 
-  const sizes = [...Array(size + 2)].fill('50px')
+  const sizes = ['0', ...Array(boardSize).fill('50px'), '0']
 
   const items = board.map((y, yIdx) =>
     y.map((x, xIdx) => {
@@ -36,7 +34,7 @@ export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
    * @param {number} x
    */
   const handleClick = (y: number, x: number) => {
-    const nextTurn: Turn = currentTurn === 1 ? -1 : 1
+    const nextTurn: Stone = currentTurn === 1 ? -1 : 1
     if (getMovablePos(board, currentTurn)[y][x]) {
       const newBoard = getFlippedBoard({
         board,
@@ -47,23 +45,19 @@ export const Board: React.FC<BoardProps> = React.memo(({ firstTurn, size }) => {
       })
       setBoard([...newBoard])
       setNextTurn(nextTurn)
-      setMovableDir([...getMovableDir(newBoard, nextTurn)])
-      setMovablePos([...getMovablePos(newBoard, nextTurn)])
     }
   }
 
   return (
     <>
       currentTurn: {currentTurn}
-      <StyledGridContainer columns={sizes} rows={sizes} areas={board.map((y, yIdx) => y.map((x, xIdx) => `area${xIdx}_${yIdx}`))}>
+      <StyledGridContainer
+        columns={sizes}
+        rows={sizes}
+        areas={board.map((y, yIdx) => y.map((x, xIdx) => `area${xIdx}_${yIdx}`))}
+      >
         {items}
       </StyledGridContainer>
-      {movableDir.map((r, i) => (
-        <p key={i}>{r.map((c) => `　 ${c} 　`)}</p>
-      ))}
-      {movablePos.map((r, i) => (
-        <p key={i}>{r.map((c) => `${c} 　`)}</p>
-      ))}
     </>
   )
 })

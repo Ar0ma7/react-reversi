@@ -3,5 +3,5 @@ export type SquareState = 0 | -1 | 1 | 2
 
 export type BoardType = SquareState[][]
 
-/* 1: 自分, -1: 相手 */
-export type Turn = 1 | -1
+/* 1: 黒, -1: 白 */
+export type Stone = 1 | -1
