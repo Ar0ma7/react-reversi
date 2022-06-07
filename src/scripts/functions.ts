@@ -1,4 +1,5 @@
-import { BoardType, Turn } from '@/types/global'
+import { BoardType, Stone } from '@/types/global'
+import { direction } from '@/scripts/variables'
 
 export const getInitialBoard = (size: number): BoardType => {
   const includeWallSize = size + 2
@@ -18,11 +19,11 @@ export const getInitialBoard = (size: number): BoardType => {
   return board
 }
 
-export const getMovableDir = (board: BoardType, currentTurn: Turn): number[][] => {
+export const getMovableDir = (board: BoardType, currentTurn: Stone): number[][] => {
   return board.map((y, yIdx) => y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)))
 }
 
-export const getMovablePos = (board: BoardType, currentTurn: Turn): boolean[][] => {
+export const getMovablePos = (board: BoardType, currentTurn: Stone): boolean[][] => {
   return board.map((y, yIdx) =>
     y.map((value, xIdx) => {
       const dir = checkMobility(board, yIdx, xIdx, currentTurn)
@@ -32,38 +33,18 @@ export const getMovablePos = (board: BoardType, currentTurn: Turn): boolean[][] 
 }
 
 export const checkMobility = (board: BoardType, y: number, x: number, currentTurn: number): number => {
-  let direction = 0
+  let dir = 0
   // 空マスじゃない場合
-  if (board[y][x] !== 0) return direction
+  if (board[y][x] !== 0) return dir
   // 左
   if (board[y][x - 1] === -currentTurn) {
-    const yTmp = y
     let xTmp = x - 2
-    while (board[yTmp][xTmp] === -currentTurn) {
+    while (board[y][xTmp] === -currentTurn) {
       xTmp -= 1
     }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 1
+    if (board[y][xTmp] === currentTurn) dir = dir | direction.LEFT
   }
   // 左上
-  if (board[y + 1][x - 1] === -currentTurn) {
-    let yTmp = y + 2
-    let xTmp = x - 2
-    while (board[yTmp][xTmp] === -currentTurn) {
-      yTmp += 1
-      xTmp -= 1
-    }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 2
-  }
-  // 上
-  if (board[y - 1][x] === -currentTurn) {
-    let yTemp = y - 2
-    const xTemp = x
-    while (board[yTemp][xTemp] === -currentTurn) {
-      yTemp -= 1
-    }
-    if (board[yTemp][xTemp] === currentTurn) direction = direction | 4
-  }
-  // 右上
   if (board[y - 1][x - 1] === -currentTurn) {
     let yTmp = y - 2
     let xTmp = x - 2
@@ -71,16 +52,33 @@ export const checkMobility = (board: BoardType, y: number, x: number, currentTur
       yTmp -= 1
       xTmp -= 1
     }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 8
+    if (board[yTmp][xTmp] === currentTurn) dir = dir | direction.UPPER_LEFT
+  }
+  // 上
+  if (board[y - 1][x] === -currentTurn) {
+    let yTemp = y - 2
+    while (board[yTemp][x] === -currentTurn) {
+      yTemp -= 1
+    }
+    if (board[yTemp][x] === currentTurn) dir = dir | direction.UPPER
+  }
+  // 右上
+  if (board[y - 1][x + 1] === -currentTurn) {
+    let yTmp = y - 2
+    let xTmp = x + 2
+    while (board[yTmp][xTmp] === -currentTurn) {
+      yTmp -= 1
+      xTmp += 1
+    }
+    if (board[yTmp][xTmp] === currentTurn) dir = dir | direction.UPPER_RIGHT
   }
   // 右
   if (board[y][x + 1] === -currentTurn) {
-    const yTmp = y
     let xTmp = x + 2
-    while (board[yTmp][xTmp] === -currentTurn) {
+    while (board[y][xTmp] === -currentTurn) {
       xTmp += 1
     }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 16
+    if (board[y][xTmp] === currentTurn) dir = dir | direction.RIGHT
   }
   // 右下
   if (board[y + 1][x + 1] === -currentTurn) {
@@ -90,28 +88,27 @@ export const checkMobility = (board: BoardType, y: number, x: number, currentTur
       yTmp += 1
       xTmp += 1
     }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 32
+    if (board[yTmp][xTmp] === currentTurn) dir = dir | direction.LOWER_RIGHT
   }
   // 下
   if (board[y + 1][x] === -currentTurn) {
     let yTmp = y + 2
-    const xTmp = x
-    while (board[yTmp][xTmp] === -currentTurn) {
+    while (board[yTmp][x] === -currentTurn) {
       yTmp += 1
     }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 64
+    if (board[yTmp][x] === currentTurn) dir = dir | direction.LOWER
   }
   // 左下
-  if (board[y - 1][x + 1] === -currentTurn) {
-    let yTmp = y - 2
-    let xTmp = x + 2
+  if (board[y + 1][x - 1] === -currentTurn) {
+    let yTmp = y + 2
+    let xTmp = x - 2
     while (board[yTmp][xTmp] === -currentTurn) {
-      yTmp -= 1
-      xTmp += 1
+      yTmp += 1
+      xTmp -= 1
     }
-    if (board[yTmp][xTmp] === currentTurn) direction = direction | 128
+    if (board[yTmp][xTmp] === currentTurn) dir = dir | direction.LOWER_LEFT
   }
-  return direction
+  return dir
 }
 
 export const getFlippedBoard = ({
@@ -120,19 +117,21 @@ export const getFlippedBoard = ({
   y,
   dir,
   currentTurn,
-} : {
+}: {
   board: BoardType
   x: number
   y: number
   dir: number
-  currentTurn: Turn
+  currentTurn: Stone
 }): BoardType => {
   const boardTemp = [...board]
 
   boardTemp[y][x] = currentTurn
 
+  console.log(dir)
+
   // 左
-  if (dir & 1) {
+  if (dir & direction.LEFT) {
     let xTmp = x - 1
     while (boardTemp[y][xTmp] === -currentTurn) {
       boardTemp[y][xTmp] = currentTurn
@@ -140,7 +139,7 @@ export const getFlippedBoard = ({
     }
   }
   // 左上
-  if (dir & 2) {
+  if (dir & direction.UPPER_LEFT) {
     let xTmp = x - 1
     let yTmp = y - 1
     while (boardTemp[yTmp][xTmp] === -currentTurn) {
@@ -150,7 +149,7 @@ export const getFlippedBoard = ({
     }
   }
   // 上
-  if (dir & 4) {
+  if (dir & direction.UPPER) {
     let yTmp = y - 1
     while (boardTemp[yTmp][x] === -currentTurn) {
       boardTemp[yTmp][x] = currentTurn
@@ -158,7 +157,7 @@ export const getFlippedBoard = ({
     }
   }
   // 右上
-  if (dir & 8) {
+  if (dir & direction.UPPER_RIGHT) {
     let xTmp = x + 1
     let yTmp = y - 1
     while (boardTemp[yTmp][xTmp] === -currentTurn) {
@@ -168,7 +167,7 @@ export const getFlippedBoard = ({
     }
   }
   // 右
-  if (dir & 16) {
+  if (dir & direction.RIGHT) {
     let xTmp = x + 1
     while (boardTemp[y][xTmp] === -currentTurn) {
       boardTemp[y][xTmp] = currentTurn
@@ -176,7 +175,7 @@ export const getFlippedBoard = ({
     }
   }
   // 右下
-  if (dir & 32) {
+  if (dir & direction.LOWER_RIGHT) {
     let xTmp = x + 1
     let yTmp = y + 1
     while (boardTemp[yTmp][xTmp] === -currentTurn) {
@@ -186,7 +185,7 @@ export const getFlippedBoard = ({
     }
   }
   // 下
-  if (dir & 64) {
+  if (dir & direction.LOWER) {
     let yTmp = y + 1
     while (boardTemp[yTmp][x] === -currentTurn) {
       boardTemp[yTmp][x] = currentTurn
@@ -194,7 +193,7 @@ export const getFlippedBoard = ({
     }
   }
   // 左下
-  if (dir & 128) {
+  if (dir & direction.LOWER_LEFT) {
     let xTmp = x - 1
     let yTmp = y + 1
     while (boardTemp[yTmp][xTmp] === -currentTurn) {
