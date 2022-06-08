@@ -124,11 +124,9 @@ export const getFlippedBoard = ({
   dir: number
   currentTurn: Stone
 }): BoardType => {
-  const boardTemp = [...board]
+  const boardTemp = [...board.map((v) => [...v])]
 
   boardTemp[y][x] = currentTurn
-
-  console.log(dir)
 
   // 左
   if (dir & direction.LEFT) {
