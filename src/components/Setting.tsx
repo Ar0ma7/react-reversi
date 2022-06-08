@@ -12,7 +12,7 @@ export const Setting: React.FC = React.memo(() => {
   let boardSize: number = 8
 
   const handleChange = (value: string): void => {
-    const size = parseInt(value)
+    const size = Number(value)
     if (size % 2 === 0) {
       boardSize = size
     }
