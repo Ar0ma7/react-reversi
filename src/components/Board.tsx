@@ -3,7 +3,7 @@ import { Square } from '@/components/Square'
 import styled from '@emotion/styled'
 import { BoardType, Stone } from '@/types/global'
 import { getFlippedBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
-import { boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
+import { AppDispatch, boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
 
 export type BoardProps = {
   currentTurn: Stone
@@ -12,14 +12,14 @@ export type BoardProps = {
 
 export const Board: React.FC<BoardProps> = ({ board }) => {
   console.log('render Board')
-  const dispatch = useAppDispatch()
+  const dispatch: AppDispatch = useAppDispatch()
   const { setCurrentTurn } = playerSlice.actions
   const { setBoard } = boardSlice.actions
-  const boardSize = useAppSelector((state) => state.board.boardSize)
-  const currentTurn = useAppSelector((state) => state.player.currentTurn)
+  const boardSize: number = useAppSelector((state) => state.board.boardSize)
+  const currentTurn: Stone = useAppSelector((state) => state.player.currentTurn)
 
-  const sizes = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
-  const areas = board.map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`).join('\n')
+  const sizes: string = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
+  const areas: string = board.map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`).join('\n')
 
   const items = board.map((y, yIdx) =>
     y.map((x, xIdx) => {

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Stone } from '@/types/global'
-import { playerSlice, boardSlice, useAppDispatch } from '@/modules'
+import { playerSlice, boardSlice, useAppDispatch, AppDispatch } from '@/modules'
 import { getInitialBoard } from '@/scripts/functions'
 
 export const Setting: React.FC = React.memo(() => {
   console.log('render Setting')
-  const dispatch = useAppDispatch()
+  const dispatch: AppDispatch = useAppDispatch()
   const { setBoardSize, setBoard } = boardSlice.actions
   const { setPlayerStone, setCurrentTurn } = playerSlice.actions
   let playerStone: Stone = 1
