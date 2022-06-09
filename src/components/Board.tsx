@@ -10,13 +10,13 @@ export type BoardProps = {
   board: BoardType
 }
 
-export const Board: React.FC<BoardProps> = ({ board }) => {
+export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
   console.log('render Board')
   const dispatch: AppDispatch = useAppDispatch()
-  const { setCurrentTurn } = playerSlice.actions
+  const { setNextTurn } = playerSlice.actions
   const { setBoard } = boardSlice.actions
   const boardSize: number = useAppSelector((state) => state.board.boardSize)
-  const currentTurn: Stone = useAppSelector((state) => state.player.currentTurn)
+  const playerStone: Stone = useAppSelector((state) => state.player.playerStone)
 
   const sizes: string = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
   const areas: string = board.map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`).join('\n')
@@ -34,7 +34,7 @@ export const Board: React.FC<BoardProps> = ({ board }) => {
 
   const handleClick = (y: number, x: number) => {
     const nextTurn: Stone = currentTurn === 1 ? -1 : 1
-    if (getMovablePos(board, currentTurn)[y][x]) {
+    if (getMovablePos(board, currentTurn)[y][x] && playerStone === currentTurn) {
       const newBoard = [
         ...getFlippedBoard({
           board,
@@ -45,7 +45,7 @@ export const Board: React.FC<BoardProps> = ({ board }) => {
         }),
       ]
       dispatch(setBoard([...newBoard]))
-      dispatch(setCurrentTurn(nextTurn))
+      dispatch(setNextTurn(nextTurn))
     }
   }
 

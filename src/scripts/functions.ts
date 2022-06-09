@@ -202,3 +202,24 @@ export const getFlippedBoard = ({
   }
   return boardTemp
 }
+
+export const getCpuFlippedBoard = (board: BoardType, currentTurn: Stone): BoardType => {
+  const movablePos: number[][] = []
+  getMovablePos(board, currentTurn).forEach((y, yIdx) => {
+    y.forEach((x, xIdx) => {
+      if (x) movablePos.push([yIdx, xIdx])
+    })
+  })
+  const randomIdx: number = Math.floor(Math.random() * movablePos.length)
+  const randomPos: number[] = movablePos[randomIdx]
+  const newBoard = [
+    ...getFlippedBoard({
+      board,
+      x: randomPos[1],
+      y: randomPos[0],
+      dir: getMovableDir(board, currentTurn)[randomPos[0]][randomPos[1]],
+      currentTurn,
+    }),
+  ]
+  return newBoard
+}
