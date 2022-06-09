@@ -8,7 +8,7 @@ import { getCpuFlippedBoard } from '@/scripts/functions'
 export default function Home() {
   console.log('render home')
   const dispatch: AppDispatch = useAppDispatch()
-  const { setCurrentTurn } = playerSlice.actions
+  const { setNextTurn } = playerSlice.actions
   const { setBoard } = boardSlice.actions
   const board: BoardType = useAppSelector((state) => state.board.board)
   const playerStone: Stone = useAppSelector((state) => state.player.playerStone)
@@ -17,7 +17,7 @@ export default function Home() {
   if (currentTurn !== playerStone) {
     setTimeout(() => {
       dispatch(setBoard([...getCpuFlippedBoard(board, currentTurn)]))
-      dispatch(setCurrentTurn(currentTurn === 1 ? -1 : 1))
+      dispatch(setNextTurn(currentTurn === 1 ? -1 : 1))
     }, 1000)
   }
 

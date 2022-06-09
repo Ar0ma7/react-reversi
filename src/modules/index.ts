@@ -20,7 +20,7 @@ export const playerSlice = createSlice({
     setPlayerStone(state, action: PayloadAction<Stone>) {
       state.playerStone = action.payload
     },
-    setCurrentTurn(state, action: PayloadAction<Stone>) {
+    setNextTurn(state, action: PayloadAction<Stone>) {
       state.currentTurn = action.payload
     },
   },

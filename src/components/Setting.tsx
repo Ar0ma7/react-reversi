@@ -7,7 +7,7 @@ export const Setting: React.FC = React.memo(() => {
   console.log('render Setting')
   const dispatch: AppDispatch = useAppDispatch()
   const { setBoardSize, setBoard } = boardSlice.actions
-  const { setPlayerStone, setCurrentTurn } = playerSlice.actions
+  const { setPlayerStone, setNextTurn } = playerSlice.actions
   let playerStone: Stone = 1
   let boardSize: number = 8
 
@@ -20,7 +20,7 @@ export const Setting: React.FC = React.memo(() => {
 
   const handleClick = () => {
     dispatch(setPlayerStone(playerStone))
-    dispatch(setCurrentTurn(playerStone))
+    dispatch(setNextTurn(1))
     dispatch(setBoardSize(boardSize))
     dispatch(setBoard(getInitialBoard(boardSize)))
   }
