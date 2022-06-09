@@ -50,7 +50,13 @@ export const Setting: React.FC = React.memo(() => {
         />
         White
       </label>
-      <input type='number' name='size' id='' defaultValue={boardSize} onChange={(e) => handleChange(e.target.value)} />
+      <input
+        type='number'
+        name='size'
+        id=''
+        defaultValue={boardSize}
+        onChange={(e) => handleChange(e.target.value)}
+      />
       <button
         onClick={() => {
           handleClick()

@@ -42,14 +42,20 @@ export default function Home() {
   })
 
   // 終了判定
-  if (!finishFlag && (emptyCount === 0 || (movablePosCount.black === 0 && movablePosCount.white === 0))) {
+  if (
+    !finishFlag &&
+    (emptyCount === 0 || (movablePosCount.black === 0 && movablePosCount.white === 0))
+  ) {
     finishFlag = true
     console.log('finish')
   }
 
   if (!finishFlag) {
     // スキップ判定
-    if ((currentTurn === 1 && movablePosCount.black === 0) || (currentTurn === -1 && movablePosCount.white === 0)) {
+    if (
+      (currentTurn === 1 && movablePosCount.black === 0) ||
+      (currentTurn === -1 && movablePosCount.white === 0)
+    ) {
       console.log('skip')
       setTimeout(() => {
         dispatch(setNextTurn(nextTurn))

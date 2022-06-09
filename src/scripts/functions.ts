@@ -20,7 +20,9 @@ export const getInitialBoard = (size: number): BoardType => {
 }
 
 export const getMovableDir = (board: BoardType, currentTurn: Stone): number[][] => {
-  return board.map((y, yIdx) => y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)))
+  return board.map((y, yIdx) =>
+    y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)),
+  )
 }
 
 export const getMovablePos = (board: BoardType, currentTurn: Stone): boolean[][] => {
@@ -32,7 +34,12 @@ export const getMovablePos = (board: BoardType, currentTurn: Stone): boolean[][]
   )
 }
 
-export const checkMobility = (board: BoardType, y: number, x: number, currentTurn: number): number => {
+export const checkMobility = (
+  board: BoardType,
+  y: number,
+  x: number,
+  currentTurn: number,
+): number => {
   let dir = 0
   // 空マスじゃない場合
   if (board[y][x] !== 0) return dir

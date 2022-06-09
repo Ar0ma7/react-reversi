@@ -19,7 +19,9 @@ export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
   const playerStone: Stone = useAppSelector((state) => state.player.playerStone)
 
   const sizes: string = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
-  const areas: string = board.map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`).join('\n')
+  const areas: string = board
+    .map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`)
+    .join('\n')
 
   const items = board.map((y, yIdx) =>
     y.map((x, xIdx) => {
