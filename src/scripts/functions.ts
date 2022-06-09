@@ -20,7 +20,9 @@ export const getInitialBoard = (size: number): BoardType => {
 }
 
 export const getMovableDir = (board: BoardType, currentTurn: Stone): number[][] => {
-  return board.map((y, yIdx) => y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)))
+  return board.map((y, yIdx) =>
+    y.map((value, xIdx) => checkMobility(board, yIdx, xIdx, currentTurn)),
+  )
 }
 
 export const getMovablePos = (board: BoardType, currentTurn: Stone): boolean[][] => {
@@ -32,7 +34,12 @@ export const getMovablePos = (board: BoardType, currentTurn: Stone): boolean[][]
   )
 }
 
-export const checkMobility = (board: BoardType, y: number, x: number, currentTurn: number): number => {
+export const checkMobility = (
+  board: BoardType,
+  y: number,
+  x: number,
+  currentTurn: number,
+): number => {
   let dir = 0
   // 空マスじゃない場合
   if (board[y][x] !== 0) return dir
@@ -124,11 +131,9 @@ export const getFlippedBoard = ({
   dir: number
   currentTurn: Stone
 }): BoardType => {
-  const boardTemp = [...board]
+  const boardTemp = [...board.map((v) => [...v])]
 
   boardTemp[y][x] = currentTurn
-
-  console.log(dir)
 
   // 左
   if (dir & direction.LEFT) {
@@ -203,4 +208,25 @@ export const getFlippedBoard = ({
     }
   }
   return boardTemp
+}
+
+export const getCpuFlippedBoard = (board: BoardType, currentTurn: Stone): BoardType => {
+  const movablePos: number[][] = []
+  getMovablePos(board, currentTurn).forEach((y, yIdx) => {
+    y.forEach((x, xIdx) => {
+      if (x) movablePos.push([yIdx, xIdx])
+    })
+  })
+  const randomIdx: number = Math.floor(Math.random() * movablePos.length)
+  const randomPos: number[] = movablePos[randomIdx]
+  const newBoard = [
+    ...getFlippedBoard({
+      board,
+      x: randomPos[1],
+      y: randomPos[0],
+      dir: getMovableDir(board, currentTurn)[randomPos[0]][randomPos[1]],
+      currentTurn,
+    }),
+  ]
+  return newBoard
 }

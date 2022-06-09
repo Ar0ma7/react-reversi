@@ -1,20 +1,27 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Square } from '@/components/Square'
 import styled from '@emotion/styled'
 import { BoardType, Stone } from '@/types/global'
-import { getFlippedBoard, getInitialBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
+import { getFlippedBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
+import { AppDispatch, boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
 
 export type BoardProps = {
-  playerStone: Stone
-  /* 盤面サイズ（偶数） */
-  boardSize: number
+  currentTurn: Stone
+  board: BoardType
 }
 
-export const Board: React.FC<BoardProps> = React.memo(({ playerStone, boardSize }) => {
-  const [currentTurn, setNextTurn] = useState<Stone>(playerStone)
-  const [board, setBoard] = useState<BoardType>(getInitialBoard(boardSize))
+export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
+  console.log('render Board')
+  const dispatch: AppDispatch = useAppDispatch()
+  const { setNextTurn } = playerSlice.actions
+  const { setBoard } = boardSlice.actions
+  const boardSize: number = useAppSelector((state) => state.board.boardSize)
+  const playerStone: Stone = useAppSelector((state) => state.player.playerStone)
 
-  const sizes = ['0', ...Array(boardSize).fill('50px'), '0']
+  const sizes: string = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
+  const areas: string = board
+    .map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`)
+    .join('\n')
 
   const items = board.map((y, yIdx) =>
     y.map((x, xIdx) => {
@@ -27,51 +34,43 @@ export const Board: React.FC<BoardProps> = React.memo(({ playerStone, boardSize 
     }),
   )
 
-  /**
-   * handleClick - 石を置く
-   *
-   * @param {number} y
-   * @param {number} x
-   */
   const handleClick = (y: number, x: number) => {
     const nextTurn: Stone = currentTurn === 1 ? -1 : 1
-    if (getMovablePos(board, currentTurn)[y][x]) {
-      const newBoard = getFlippedBoard({
-        board,
-        x,
-        y,
-        dir: getMovableDir(board, currentTurn)[y][x],
-        currentTurn,
-      })
-      setBoard([...newBoard])
-      setNextTurn(nextTurn)
+    if (getMovablePos(board, currentTurn)[y][x] && playerStone === currentTurn) {
+      const newBoard = [
+        ...getFlippedBoard({
+          board,
+          x,
+          y,
+          dir: getMovableDir(board, currentTurn)[y][x],
+          currentTurn,
+        }),
+      ]
+      dispatch(setBoard([...newBoard]))
+      dispatch(setNextTurn(nextTurn))
     }
   }
 
   return (
     <>
       currentTurn: {currentTurn}
-      <StyledGridContainer
-        columns={sizes}
-        rows={sizes}
-        areas={board.map((y, yIdx) => y.map((x, xIdx) => `area${xIdx}_${yIdx}`))}
-      >
+      <StyledGridContainer columns={sizes} rows={sizes} areas={areas}>
         {items}
       </StyledGridContainer>
     </>
   )
-})
+}
 Board.displayName = 'Board'
 
 const StyledGridContainer = styled.div<{
-  columns: string[]
-  rows: string[]
-  areas: string[][]
+  columns: string
+  rows: string
+  areas: string
 }>`
   display: grid;
-  grid-template-columns: ${({ columns }) => columns.join(' ')};
-  grid-template-rows: ${({ rows }) => rows.join(' ')};
-  grid-template-areas: ${({ areas }) => areas.map((r) => `"${r.join(' ')}"`).join('\n')};
+  grid-template-columns: ${({ columns }) => columns};
+  grid-template-rows: ${({ rows }) => rows};
+  grid-template-areas: ${({ areas }) => areas};
 `
 
 const StyledGridItem = styled.div<{
