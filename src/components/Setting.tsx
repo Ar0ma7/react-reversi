@@ -86,10 +86,10 @@ export const Setting: React.FC = React.memo(() => {
                 onChange={(e) => {
                   const value = Number(e.target.value)
                   setSize(value)
-                  if (value % 2 === 0) {
-                    setErrorFlag(false)
-                  } else {
+                  if (value % 2 === 1 || value > 30) {
                     setErrorFlag(true)
+                  } else {
+                    setErrorFlag(false)
                   }
                 }}
               />
@@ -99,7 +99,9 @@ export const Setting: React.FC = React.memo(() => {
               <Button variant='outline-secondary' onClick={() => setSize(size + 2)}>
                 +
               </Button>
-              <Form.Control.Feedback type='invalid'>偶数を入力してください</Form.Control.Feedback>
+              <Form.Control.Feedback type='invalid'>
+                30以下の偶数を入力してください
+              </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
           <div css={buttonOuter}>
