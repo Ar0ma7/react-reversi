@@ -18,7 +18,7 @@ export default function Home() {
     setTimeout(() => {
       dispatch(setBoard([...getCpuFlippedBoard(board, currentTurn)]))
       dispatch(setCurrentTurn(currentTurn === 1 ? -1 : 1))
-    }, 1000);
+    }, 1000)
   }
 
   return (
