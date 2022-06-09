@@ -10,14 +10,13 @@ export type BoardProps = {
   board: BoardType
 }
 
-export const Board: React.FC<BoardProps> = ({ board }) => {
+export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
   console.log('render Board')
   const dispatch: AppDispatch = useAppDispatch()
   const { setNextTurn } = playerSlice.actions
   const { setBoard } = boardSlice.actions
   const boardSize: number = useAppSelector((state) => state.board.boardSize)
   const playerStone: Stone = useAppSelector((state) => state.player.playerStone)
-  const currentTurn: Stone = useAppSelector((state) => state.player.currentTurn)
 
   const sizes: string = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
   const areas: string = board.map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`).join('\n')

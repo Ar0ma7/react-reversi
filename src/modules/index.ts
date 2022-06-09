@@ -51,8 +51,8 @@ export const boardSlice = createSlice({
 
 export const store = configureStore({
   reducer: {
-    board: boardSlice.reducer,
     player: playerSlice.reducer,
+    board: boardSlice.reducer,
   },
 })
 
