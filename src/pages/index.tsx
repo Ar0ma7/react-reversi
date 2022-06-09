@@ -4,6 +4,7 @@ import { Setting } from '@/components/Setting'
 import { AppDispatch, boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
 import { BoardType, Stone } from '@/types/global'
 import { getCpuFlippedBoard, getMovablePos } from '@/scripts/functions'
+import { css } from '@emotion/react'
 
 export default function Home() {
   console.log('render home')
@@ -70,9 +71,22 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Setting />
+    <div css={container}>
+      <div css={{ marginBottom: 20 }}>
+        <h1 css={heading1}>React Reversi</h1>
+        <Setting />
+      </div>
       <Board currentTurn={currentTurn} board={board} />
-    </>
+    </div>
   )
 }
+
+const container = css`
+  padding: 20px 40px;
+`
+
+const heading1 = css`
+  display: inline-block;
+  margin: 0 40px 0 0;
+  font-size: 32px;
+`
