@@ -98,7 +98,7 @@ export default function Home() {
       </div>
       Current Turn:{' '}
       <StyledPlayerName currentTurn={currentTurn}>{playerName.get(currentTurn)}</StyledPlayerName>
-      {currentTurn !== playerStone && <Spinner animation="border" size='sm' />}
+      {currentTurn !== playerStone && <Spinner animation='border' size='sm' />}
       <div css={boardOuter}>
         <Board currentTurn={currentTurn} board={board} />
         {skipFlag && (
