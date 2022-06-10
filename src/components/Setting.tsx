@@ -6,7 +6,6 @@ import { Button, Form, InputGroup, Offcanvas } from 'react-bootstrap'
 import { css } from '@emotion/react'
 
 export const Setting: React.FC = React.memo(() => {
-  console.log('render Setting')
   const dispatch: AppDispatch = useAppDispatch()
   const { setBoardSize, setBoard } = boardSlice.actions
   const { setPlayerStone, setNextTurn } = playerSlice.actions
