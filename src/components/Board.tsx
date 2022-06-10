@@ -12,7 +12,6 @@ export type BoardProps = {
 }
 
 export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
-  console.log('render Board')
   const dispatch: AppDispatch = useAppDispatch()
   const { setNextTurn } = playerSlice.actions
   const { setBoard } = boardSlice.actions

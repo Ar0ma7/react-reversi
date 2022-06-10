@@ -10,7 +10,6 @@ import styled from '@emotion/styled'
 import { Spinner } from 'react-bootstrap'
 
 export default function Home() {
-  console.log('render home')
   const dispatch: AppDispatch = useAppDispatch()
   const { setNextTurn } = playerSlice.actions
   const { setBoard } = boardSlice.actions
@@ -75,7 +74,6 @@ export default function Home() {
       (currentTurn === 1 && movablePosCount.black === 0) ||
       (currentTurn === -1 && movablePosCount.white === 0)
     ) {
-      console.log('skip')
       skipFlag = true
       setTimeout(() => {
         skipFlag = false
