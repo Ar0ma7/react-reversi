@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { BoardType, Stone } from '@/types/global'
 import { getFlippedBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
 import { AppDispatch, boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
+import { css } from '@emotion/react'
 
 export type BoardProps = {
   currentTurn: Stone
@@ -18,17 +19,25 @@ export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
   const boardSize: number = useAppSelector((state) => state.board.boardSize)
   const playerStone: Stone = useAppSelector((state) => state.player.playerStone)
 
-  const sizes: string = ['0', ...Array(boardSize).fill('50px'), '0'].join(' ')
+  const squareSizes: string = ['0', ...Array(boardSize).fill('1fr'), '0'].join(' ')
   const areas: string = board
     .map((y, yIdx) => `"${y.map((x, xIdx) => `area${xIdx}_${yIdx}`).join(' ')}"`)
     .join('\n')
 
   const items = board.map((y, yIdx) =>
     y.map((x, xIdx) => {
-      const key = `area${xIdx}_${yIdx}`
+      const key: string = `area${xIdx}_${yIdx}`
+      const isMovable: boolean = getMovablePos(board, currentTurn)[yIdx][xIdx]
+      const highlightColor: string = currentTurn === playerStone ? '#0b5ed7' : '#bb2d3b'
       return (
-        <StyledGridItem key={key} area={key} onClick={() => handleClick(yIdx, xIdx)}>
-          <Square state={x} />
+        <StyledGridItem
+          key={key}
+          area={key}
+          onClick={() => handleClick(yIdx, xIdx)}
+          isMovable={isMovable}
+          highlightColor={highlightColor}
+        >
+          <Square state={x} size={'100%'} />
         </StyledGridItem>
       )
     }),
@@ -53,8 +62,7 @@ export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
 
   return (
     <>
-      currentTurn: {currentTurn}
-      <StyledGridContainer columns={sizes} rows={sizes} areas={areas}>
+      <StyledGridContainer columns={squareSizes} rows={squareSizes} areas={areas}>
         {items}
       </StyledGridContainer>
     </>
@@ -71,10 +79,34 @@ const StyledGridContainer = styled.div<{
   grid-template-columns: ${({ columns }) => columns};
   grid-template-rows: ${({ rows }) => rows};
   grid-template-areas: ${({ areas }) => areas};
+  border: 1px solid #000;
+  margin-top: 20px;
+  width: 100%;
+  height: 100%;
 `
 
 const StyledGridItem = styled.div<{
   area: string
+  isMovable: boolean
+  highlightColor: string
 }>`
   grid-area: ${({ area }) => area};
+  position: relative;
+  ${(props) => {
+    if (props.isMovable) {
+      return css`
+        &::before {
+          content: '';
+          display: block;
+          border: 2px dashed ${props.highlightColor};
+          background-color: ${`${props.highlightColor}55`};
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      `
+    }
+  }}
 `

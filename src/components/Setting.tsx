@@ -74,7 +74,7 @@ export const Setting: React.FC = React.memo(() => {
             </div>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Board Size</Form.Label>
+            <Form.Label>Board Size 4~30 (Default: 8)</Form.Label>
             <InputGroup hasValidation>
               <Form.Control
                 type='number'
@@ -86,21 +86,39 @@ export const Setting: React.FC = React.memo(() => {
                 onChange={(e) => {
                   const value = Number(e.target.value)
                   setSize(value)
-                  if (value % 2 === 1 || value > 30) {
+                  if (value % 2 === 1 || value < 4 || value > 30) {
                     setErrorFlag(true)
                   } else {
                     setErrorFlag(false)
                   }
                 }}
               />
-              <Button variant='outline-secondary' onClick={() => setSize(size - 2)}>
+              <Button
+                variant='outline-secondary'
+                disabled={size <= 4}
+                onClick={() => {
+                  const nextSize = size - 2
+                  setSize(nextSize)
+                  if (nextSize < 4) setErrorFlag(true)
+                  else setErrorFlag(false)
+                }}
+              >
                 -
               </Button>
-              <Button variant='outline-secondary' onClick={() => setSize(size + 2)}>
+              <Button
+                variant='outline-secondary'
+                disabled={size >= 30}
+                onClick={() => {
+                  const nextSize = size + 2
+                  setSize(nextSize)
+                  if (nextSize > 30) setErrorFlag(true)
+                  else setErrorFlag(false)
+                }}
+              >
                 +
               </Button>
               <Form.Control.Feedback type='invalid'>
-                30以下の偶数を入力してください
+                4以上、30以下の偶数を入力してください
               </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
