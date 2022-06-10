@@ -97,17 +97,17 @@ export default function Home() {
       </div>
       Current Turn:{' '}
       <StyledPlayerName currentTurn={currentTurn}>{playerName.get(currentTurn)}</StyledPlayerName>
-      <StyledBoardOuter>
+      <div css={boardOuter}>
         <Board currentTurn={currentTurn} board={board} />
         {skipFlag && (
-          <StyledBoardOverlay>
-            <div css={{ textAlign: 'center' }}>
-              <p css={{ fontSize: 64 }}>{playerName.get(currentTurn)} Turn Skip!</p>
+          <div css={boardOverlay}>
+            <div css={overlayBody}>
+              <p css={overlayTitle}>{playerName.get(currentTurn)} Turn Skip!</p>
               <p css={{ fontSize: 32 }}>{playerName.get(-currentTurn)} Turn &gt;&gt;</p>
             </div>
-          </StyledBoardOverlay>
+          </div>
         )}
-      </StyledBoardOuter>
+      </div>
       <FinishModal
         show={modalShow}
         onHide={() => setModalShow(false)}
@@ -151,13 +151,13 @@ const StyledPlayerName = styled.span<{
   }}
 `
 
-const StyledBoardOuter = styled.div`
+const boardOuter = css`
   width: 700px;
   height: 700px;
   position: relative;
 `
 
-const StyledBoardOverlay = styled.div`
+const boardOverlay = css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -168,4 +168,14 @@ const StyledBoardOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+`
+
+const overlayBody = css`
+  text-align: center;
+  font-style: italic;
+`
+
+const overlayTitle = css`
+  font-size: 64px;
+  font-weight: bold;
 `
