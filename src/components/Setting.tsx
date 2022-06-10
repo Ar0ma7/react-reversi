@@ -74,7 +74,7 @@ export const Setting: React.FC = React.memo(() => {
             </div>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Board Size [4~30] (Default: 8)</Form.Label>
+            <Form.Label>Board Size 4~30 (Default: 8)</Form.Label>
             <InputGroup hasValidation>
               <Form.Control
                 type='number'

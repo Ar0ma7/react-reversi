@@ -5,13 +5,14 @@ import styled from '@emotion/styled'
 
 export type SquareProps = {
   state: SquareState
+  size: string
 }
 
-export const Square: React.FC<SquareProps> = React.memo(({ state }) => {
+export const Square: React.FC<SquareProps> = React.memo(({ state, size }) => {
   return (
     <>
       {state !== 2 && (
-        <StyledSquare state={state}>
+        <StyledSquare state={state} size={size}>
           <StyledStone state={state} />
         </StyledSquare>
       )}
@@ -22,6 +23,7 @@ Square.displayName = `Square`
 
 const StyledSquare = styled.div<{
   state: SquareState
+  size: string
 }>`
   ${(props) =>
     props.state !== 2 &&
@@ -30,8 +32,8 @@ const StyledSquare = styled.div<{
       justify-content: center;
       align-items: center;
       border: 1px solid #000;
-      width: 50px;
-      height: 50px;
+      width: ${props.size};
+      height: ${props.size};
       background-color: green;
     `}
 `
