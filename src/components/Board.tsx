@@ -54,7 +54,10 @@ export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
 
   return (
     <>
-      Current Turn: <StyledPlayerText currentTurn={currentTurn}>{currentTurn === playerStone ? 'You' : 'CPU'}</StyledPlayerText>
+      Current Turn:{' '}
+      <StyledPlayerText currentTurn={currentTurn}>
+        {currentTurn === playerStone ? 'You' : 'CPU'}
+      </StyledPlayerText>
       <StyledGridContainer columns={squareSizes} rows={squareSizes} areas={areas}>
         {items}
       </StyledGridContainer>
@@ -92,7 +95,7 @@ const StyledPlayerText = styled.span<{
   border-radius: 5px;
   padding: 2px 10px 4px;
   line-height: 1;
-  ${props => {
+  ${(props) => {
     if (props.currentTurn === 1) {
       return css`
         background-color: #000;
