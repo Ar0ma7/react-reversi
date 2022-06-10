@@ -6,6 +6,7 @@ import { BoardType, Stone } from '@/types/global'
 import { getCpuFlippedBoard, getMovablePos } from '@/scripts/functions'
 import { css } from '@emotion/react'
 import { FinishModal } from '@/components/FinishModal'
+import styled from '@emotion/styled'
 
 export default function Home() {
   console.log('render home')
@@ -19,6 +20,10 @@ export default function Home() {
   const [finishFlag, setFinishFlag] = useState<boolean>(false)
   const [modalShow, setModalShow] = useState<boolean>(false)
 
+  const playerName = new Map([
+    [playerStone, 'Player'],
+    [-playerStone, 'CPU'],
+  ])
   const nextTurn = currentTurn === 1 ? -1 : 1
   const movablePosCount = {
     black: 0,
@@ -29,6 +34,8 @@ export default function Home() {
     white: 0,
     empty: 0,
   }
+
+  let skipFlag: boolean = false
 
   board.forEach((y) => {
     y.forEach((x) => {
@@ -68,9 +75,11 @@ export default function Home() {
       (currentTurn === -1 && movablePosCount.white === 0)
     ) {
       console.log('skip')
+      skipFlag = true
       setTimeout(() => {
+        skipFlag = false
         dispatch(setNextTurn(nextTurn))
-      }, 1000)
+      }, 1500)
     } else if (currentTurn !== playerStone) {
       // CPU の行動
       setTimeout(() => {
@@ -86,7 +95,19 @@ export default function Home() {
         <h1 css={heading1}>React Reversi</h1>
         <Setting />
       </div>
-      <Board currentTurn={currentTurn} board={board} />
+      Current Turn:{' '}
+      <StyledPlayerName currentTurn={currentTurn}>{playerName.get(currentTurn)}</StyledPlayerName>
+      <StyledBoardOuter>
+        <Board currentTurn={currentTurn} board={board} />
+        {skipFlag && (
+          <StyledBoardOverlay>
+            <div css={{ textAlign: 'center' }}>
+              <p css={{ fontSize: 64 }}>{playerName.get(currentTurn)} Turn Skip!</p>
+              <p css={{ fontSize: 32 }}>{playerName.get(-currentTurn)} Turn &gt;&gt;</p>
+            </div>
+          </StyledBoardOverlay>
+        )}
+      </StyledBoardOuter>
       <FinishModal
         show={modalShow}
         onHide={() => setModalShow(false)}
@@ -105,4 +126,46 @@ const heading1 = css`
   display: inline-block;
   margin: 0 40px 0 0;
   font-size: 32px;
+`
+
+const StyledPlayerName = styled.span<{
+  currentTurn: Stone
+}>`
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 2px 10px 4px;
+  line-height: 1;
+  ${(props) => {
+    if (props.currentTurn === 1) {
+      return css`
+        background-color: #000;
+        color: #fff;
+      `
+    } else {
+      return css`
+        background-color: #fff;
+        color: #000;
+      `
+    }
+  }}
+`
+
+const StyledBoardOuter = styled.div`
+  width: 700px;
+  height: 700px;
+  position: relative;
+`
+
+const StyledBoardOverlay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 `

@@ -4,7 +4,6 @@ import styled from '@emotion/styled'
 import { BoardType, Stone } from '@/types/global'
 import { getFlippedBoard, getMovableDir, getMovablePos } from '@/scripts/functions'
 import { AppDispatch, boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
-import { css } from '@emotion/react'
 
 export type BoardProps = {
   currentTurn: Stone
@@ -54,10 +53,6 @@ export const Board: React.FC<BoardProps> = ({ board, currentTurn }) => {
 
   return (
     <>
-      Current Turn:{' '}
-      <StyledPlayerText currentTurn={currentTurn}>
-        {currentTurn === playerStone ? 'You' : 'CPU'}
-      </StyledPlayerText>
       <StyledGridContainer columns={squareSizes} rows={squareSizes} areas={areas}>
         {items}
       </StyledGridContainer>
@@ -77,36 +72,12 @@ const StyledGridContainer = styled.div<{
   grid-template-areas: ${({ areas }) => areas};
   border: 1px solid #000;
   margin-top: 20px;
-  width: 700px;
-  height: 700px;
+  width: 100%;
+  height: 100%;
 `
 
 const StyledGridItem = styled.div<{
   area: string
 }>`
   grid-area: ${({ area }) => area};
-`
-
-const StyledPlayerText = styled.span<{
-  currentTurn: Stone
-}>`
-  display: inline-block;
-  border: 1px solid #000;
-  border-radius: 5px;
-  padding: 2px 10px 4px;
-  line-height: 1;
-  ${(props) => {
-    if (props.currentTurn === 1) {
-      return css`
-        background-color: #000;
-        color: #fff;
-      `
-    }
-    if (props.currentTurn === -1) {
-      return css`
-        background-color: #fff;
-        color: #000;
-      `
-    }
-  }}
 `

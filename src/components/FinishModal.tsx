@@ -14,7 +14,7 @@ export const FinishModal: React.FC<FinishModalProps> = React.memo(
     const isDraw: boolean = playerStoneCount === cpuStoneCount
     const isWin: boolean = playerStoneCount > cpuStoneCount
     return (
-      <Modal show={show} size='lg' centered>
+      <Modal show={show} size='sm' centered>
         <Modal.Header closeButton>
           <Modal.Title>{isDraw ? 'Draw' : isWin ? 'You Win' : 'You Lose'}</Modal.Title>
         </Modal.Header>
