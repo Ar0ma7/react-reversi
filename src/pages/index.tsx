@@ -7,6 +7,7 @@ import { getCpuFlippedBoard, getMovablePos } from '@/scripts/functions'
 import { css } from '@emotion/react'
 import { FinishModal } from '@/components/FinishModal'
 import styled from '@emotion/styled'
+import { Spinner } from 'react-bootstrap'
 
 export default function Home() {
   console.log('render home')
@@ -97,6 +98,7 @@ export default function Home() {
       </div>
       Current Turn:{' '}
       <StyledPlayerName currentTurn={currentTurn}>{playerName.get(currentTurn)}</StyledPlayerName>
+      {currentTurn !== playerStone && <Spinner animation="border" size='sm' />}
       <div css={boardOuter}>
         <Board currentTurn={currentTurn} board={board} />
         {skipFlag && (
@@ -134,6 +136,7 @@ const StyledPlayerName = styled.span<{
   display: inline-block;
   border: 1px solid #000;
   border-radius: 5px;
+  margin-right: 10px;
   padding: 2px 10px 4px;
   line-height: 1;
   ${(props) => {
