@@ -1,5 +1,29 @@
 import { BoardType, Stone } from '@/types/global'
 import { direction } from '@/scripts/variables'
+import { useEffect, useState } from 'react'
+
+export const getWindowSize = (): { width: number; height: number } => {
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0,
+  })
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        })
+      }
+
+      window.addEventListener('resize', handleResize)
+      handleResize()
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+  return windowSize
+}
 
 export const getInitialBoard = (size: number): BoardType => {
   const includeWallSize = size + 2

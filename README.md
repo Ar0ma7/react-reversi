@@ -4,7 +4,7 @@
 This is a reversi.
 
 ***DEMO:***
-https://react-reversi-git-develop-ar0ma7.vercel.app/
+https://react-reversi.vercel.app/
 
 If you want to start the game over, reload the page.
 

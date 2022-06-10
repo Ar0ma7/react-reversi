@@ -3,11 +3,12 @@ import { Board } from '@/components/Board'
 import { Setting } from '@/components/Setting'
 import { AppDispatch, boardSlice, playerSlice, useAppDispatch, useAppSelector } from '@/modules'
 import { BoardType, Stone } from '@/types/global'
-import { getCpuFlippedBoard, getMovablePos } from '@/scripts/functions'
+import { getCpuFlippedBoard, getMovablePos, getWindowSize } from '@/scripts/functions'
 import { css } from '@emotion/react'
 import { FinishModal } from '@/components/FinishModal'
 import styled from '@emotion/styled'
 import { Spinner } from 'react-bootstrap'
+import Head from 'next/head'
 
 export default function Home() {
   const dispatch: AppDispatch = useAppDispatch()
@@ -34,6 +35,10 @@ export default function Home() {
     white: 0,
     empty: 0,
   }
+  const windowSize = getWindowSize()
+  const canvasWidth = windowSize.width - 40
+  const canvasHeight = windowSize.height - 170
+  const canvasSize = canvasWidth <= canvasHeight ? canvasWidth : canvasHeight
 
   let skipFlag: boolean = false
 
@@ -89,37 +94,47 @@ export default function Home() {
   }
 
   return (
-    <div css={container}>
-      <div css={{ marginBottom: 20 }}>
-        <h1 css={heading1}>React Reversi</h1>
-        <Setting />
-      </div>
-      Current Turn:{' '}
-      <StyledPlayerName currentTurn={currentTurn}>{playerName.get(currentTurn)}</StyledPlayerName>
-      {currentTurn !== playerStone && <Spinner animation='border' size='sm' />}
-      <div css={boardOuter}>
-        <Board currentTurn={currentTurn} board={board} />
-        {skipFlag && (
-          <div css={boardOverlay}>
-            <div css={overlayBody}>
-              <p css={overlayTitle}>{playerName.get(currentTurn)} Turn Skip!</p>
-              <p css={{ fontSize: 32 }}>{playerName.get(-currentTurn)} Turn &gt;&gt;</p>
+    <div>
+      <Head>
+        <title>React Reversi</title>
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+        />
+        <meta name='robots' content='noindex' />
+      </Head>
+      <div css={container}>
+        <div css={{ marginBottom: 20 }}>
+          <h1 css={heading1}>React Reversi</h1>
+          <Setting />
+        </div>
+        Current Turn:{' '}
+        <StyledPlayerName currentTurn={currentTurn}>{playerName.get(currentTurn)}</StyledPlayerName>
+        {!finishFlag && currentTurn !== playerStone && <Spinner animation='border' size='sm' />}
+        <StyledBoardOuter size={canvasSize}>
+          <Board currentTurn={currentTurn} board={board} />
+          {skipFlag && (
+            <div css={boardOverlay}>
+              <div css={overlayBody}>
+                <p css={overlayTitle}>{playerName.get(currentTurn)} Turn Skip!</p>
+                <p css={{ fontSize: 32 }}>{playerName.get(-currentTurn)} Turn &gt;&gt;</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </StyledBoardOuter>
+        <FinishModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          playerStoneCount={playerStone === 1 ? stoneCount.black : stoneCount.white}
+          cpuStoneCount={playerStone === 1 ? stoneCount.white : stoneCount.black}
+        />
       </div>
-      <FinishModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        playerStoneCount={playerStone === 1 ? stoneCount.black : stoneCount.white}
-        cpuStoneCount={playerStone === 1 ? stoneCount.white : stoneCount.black}
-      />
     </div>
   )
 }
 
 const container = css`
-  padding: 20px 40px;
+  padding: 20px;
 `
 
 const heading1 = css`
@@ -152,9 +167,11 @@ const StyledPlayerName = styled.span<{
   }}
 `
 
-const boardOuter = css`
-  width: 700px;
-  height: 700px;
+const StyledBoardOuter = styled.div<{
+  size: number
+}>`
+  width: ${({ size }) => `${size}px`};
+  height: ${({ size }) => `${size}px`};
   position: relative;
 `
 
