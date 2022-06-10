@@ -16,7 +16,7 @@ export const FinishModal: React.FC<FinishModalProps> = React.memo(
     return (
       <Modal show={show} size='sm' centered>
         <Modal.Header closeButton>
-          <Modal.Title>{isDraw ? 'Draw' : isWin ? 'You Win' : 'You Lose'}</Modal.Title>
+          <Modal.Title>{isDraw ? 'Draw' : isWin ? 'You Win !!!' : 'You Lose ...'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>Player: {playerStoneCount}</p>
